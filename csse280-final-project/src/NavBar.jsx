@@ -10,7 +10,7 @@ function NavBar() {
      <nav className='navbar'>
       <ul>
         <li><a href="">For You</a></li>
-        <li><a href="">Explore</a></li>
+        <li><a href="./explore.html">Explore</a></li>
         <li><a href = "">Profile</a></li>
       </ul>
      </nav>
