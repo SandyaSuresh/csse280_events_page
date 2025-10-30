@@ -1,0 +1,21 @@
+.navbar li, .foot li{
+    color: white;
+    display: inline;
+    margin: 2em;
+    padding: 1em, 0em;
+}
+
+.navbar li a, .foot li a{
+    font-size: 20pt;
+    color: white;
+    text-decoration: underline;
+}
+
+.navbar li a:visited, .foot li a:visited{
+    color: bisque;
+}
+
+.navbar li a:hover, .foot li a:hover{
+    color: grey;
+}
+  

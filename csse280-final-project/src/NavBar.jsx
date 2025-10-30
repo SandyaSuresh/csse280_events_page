@@ -1,0 +1,21 @@
+// import { useState } from 'react'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
+import './NavBar.css'
+
+function NavBar() {
+  // const [count, setCount] = useState(0)
+  return (
+    <>
+     <nav className='navbar'>
+      <ul>
+        <li><a href="">For You</a></li>
+        <li><a href="">Explore</a></li>
+        <li><a href = "">Profile</a></li>
+      </ul>
+     </nav>
+     </>
+  );
+};
+
+export default NavBar;
