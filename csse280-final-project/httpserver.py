@@ -1,6 +1,6 @@
 import flask
 import json
-# import dataservice
+import dataservice
 import os
 from flask import jsonify
 from flask import request
@@ -25,9 +25,15 @@ app.config['JWT_SECRET_KEY'] = "mysecretkey"
 jwt = JWTManager(app)
 
 @app.get("/shutdown")
-@jwt_required()
 def shutdown():
     os._exit(0)
+
+@app.get("/events")
+def get_events():
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_events_list()))
+ 
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
