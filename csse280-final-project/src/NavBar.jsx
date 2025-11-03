@@ -9,8 +9,8 @@ function NavBar() {
     <>
      <nav className='navbar'>
       <ul>
-        <li><a href="">For You</a></li>
-        <li><a href="./explore.html">Explore</a></li>
+        <li><a href="events.html">For You</a></li>
+        <li><a href="explore.html">Explore</a></li>
         <li><a href = "">Profile</a></li>
       </ul>
      </nav>

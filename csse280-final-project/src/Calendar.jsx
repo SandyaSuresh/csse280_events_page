@@ -1,24 +1,58 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './Calendar.css'
 
+function createDays(numDays, activeDay, func){
+  let list = document.createElement("ul")
+  list.className="days"
+  for(let i = 1; i <= numDays; i++){
+    let list_item = document.createElement("li");
+    list_item.id = i;
+    if(i == activeDay){
+      list_item.innerHTML = `<span class="active">${i}</span>`;
+    }else{
+      list_item.innerHTML = i;
+    }
+    list_item.onclick = () => {func(i); createDays(numDays, i, func);}
+    list.appendChild(list_item)
+  }
+
+  document.getElementById("days-list").replaceChildren(list)
+}
+
 function Calendar() {
-  // const [count, setCount] = useState(0)
+
+  const [month, setMonth] = useState("")
+  const [day, setDay] = useState(0)
+
+  let dateobj = new Date();
+  let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  let monthIndex = dateobj.getMonth();
+  let year = dateobj.getYear();
+  let monthString = months[monthIndex];
+  let days  = new Date(year, monthIndex, 0).getDate();
+  
+  useEffect(() => {createDays(days, day, setDay)}, [day, days]);
+
+  window.addEventListener("load", () => {
+    setMonth(monthString);
+    setDay(dateobj.getDate());
+  })
+
+
+
   return (
     <>
-      <button>Add Event</button>
-      {/* <div class="month">
+       <div className="month">
         <ul>
-          <li class="prev">&#10094;</li>
-          <li class="next">&#10095;</li>
-          <li>August<br></br>
-            <span style="font-size:18px">2021</span>
+          <li className="prev">Prev</li>
+          <li className="next">Next</li>
+          <li>{month}<br></br>
+            <span>2021</span>
           </li>
         </ul>
       </div>
 
-      <ul class="weekdays">
+      <ul className="weekdays">
         <li>Mo</li>
         <li>Tu</li>
         <li>We</li>
@@ -27,42 +61,12 @@ function Calendar() {
         <li>Sa</li>
         <li>Su</li>
       </ul>
-
-      <ul class="days">
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>7</li>
-        <li>8</li>
-        <li>9</li>
-        <li><span class="active">10</span></li>
-        <li>11</li>
-        <li>12</li>
-        <li>13</li>
-        <li>14</li>
-        <li>15</li>
-        <li>16</li>
-        <li>17</li>
-        <li>18</li>
-        <li>19</li>
-        <li>20</li>
-        <li>21</li>
-        <li>22</li>
-        <li>23</li>
-        <li>24</li>
-        <li>25</li>
-        <li>26</li>
-        <li>27</li>
-        <li>28</li>
-        <li>29</li>
-        <li>30</li>
-      </ul>  */}
-
+      <div id="days-list">
+        
+      </div>
      </>
   );
+
 };
 
 export default Calendar;

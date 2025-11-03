@@ -3,16 +3,10 @@ body {font-family: Verdana, sans-serif;}
 
 /* Month header */
 .month {
-  padding: 70px 25px;
-  width: 100%;
+  padding: 5%, 0px;
+  width: 50%;
   background: #1abc9c;
   text-align: center;
-}
-
-/* Month list */
-.month ul {
-  margin: 0;
-  padding: 0;
 }
 
 .month ul li {
@@ -25,17 +19,20 @@ body {font-family: Verdana, sans-serif;}
 /* Previous button inside month header */
 .month .prev {
   float: left;
+  width: 33%;
   padding-top: 10px;
 }
 
 /* Next button */
 .month .next {
   float: right;
+  width: 33%;
   padding-top: 10px;
 }
 
 /* Weekdays (Mon-Sun) */
 .weekdays {
+  width: 50%;
   margin: 0;
   padding: 10px 0;
   background-color:#ddd;
@@ -51,6 +48,7 @@ body {font-family: Verdana, sans-serif;}
 /* Days (1-31) */
 .days {
   padding: 10px 0;
+  width: 50%;
   background: #eee;
   margin: 0;
 }

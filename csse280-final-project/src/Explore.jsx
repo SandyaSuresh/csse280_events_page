@@ -110,7 +110,6 @@ export default Explore;
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <NavBar />
-    {/* <App /> */}
     <Explore />
   </StrictMode>,
 )
