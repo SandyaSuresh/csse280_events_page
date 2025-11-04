@@ -38,3 +38,15 @@ def get_user_data(db, username):
 def get_events_list():
     db = get_db()
     return db["events"]
+
+def get_events_list(month): # what about events that roll over into the next month?
+    month_of_year = month.split("/")[0]
+    year = month_of_year.split("/")[1]
+    db = get_db()
+    events = []
+    for event in db["events"]:
+        event_month = db[event]["start"].split("/")[0]
+        event_year = db[event]["start"].split("/")[2]
+        if (event_month == month_of_year and event_year == year):
+            events += event
+    return events # probably formatted wrong or something

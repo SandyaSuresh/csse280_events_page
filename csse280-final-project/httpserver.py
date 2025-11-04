@@ -28,12 +28,17 @@ jwt = JWTManager(app)
 def shutdown():
     os._exit(0)
 
-@app.get("/events")
-def get_events():
+# @app.get("/events")
+# def get_events():
+#     return flask.Response(status="200 OK",
+#                           headers={"Content-Type": "application/json"},
+#                           response = json.dumps(dataservice.get_events_list()))
+
+@app.get("/events/<month>") # formatted like MM/YY?
+def get_events(month):
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_events_list()))
- 
+                          response = json.dumps(dataservice.get_events_list(month)))  
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
