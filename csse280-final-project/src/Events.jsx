@@ -34,11 +34,23 @@ function setDay(i, day, func){
   func(parts[0] + "-" + format_day + "-" + parts[2])
 }
 
-function setMonth(i, day, func){
-  let parts = day.split("/");
-  let format_month = parts[0] < 10 ? "0" + parts[0] : parts[0]; 
-  func(format_month + "-" + parts[1] + "-" + parts[2])
+function changeMonth(diff, day, func) {
+  let parts = day.split("-");
+  let select = 1
+  let monthIndex = parseInt(parts[0])
+  let year = parseInt(parts[2])
+  monthIndex += diff;
 
+  if (monthIndex < 1) {
+
+    monthIndex = 12;
+    year--;
+  } else if (monthIndex > 12) {
+    monthIndex = 1;
+    year++;
+  }
+   
+  func(monthIndex + "-" + select + "-" + year)
 }
 
 function Events(){
@@ -53,7 +65,7 @@ function Events(){
   <>
   {/* <Calendar year={year} month={month} day={day} 
             changeYear={(i) => {setYear(i)}} changeMonth={(i) => {setMonth(i)}} changeDay={(i) => {setDay(i)}}></Calendar> */}
-  <Calendar setDay={(i) => setDay(i, date, setDate)} />
+  <Calendar date={date} setDay={(i) => setDay(i, date, setDate)} changeMonth={(i) => {changeMonth(i, date, setDate)}} />
   <Timeline json={json}></Timeline>
   </>
   );

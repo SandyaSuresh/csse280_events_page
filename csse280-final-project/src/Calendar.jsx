@@ -25,7 +25,7 @@ function createDays(numDays, activeDay, weekdayOfFirst, func){
   }
 }
 
-function loadMonth(monthIndex, year, func) {
+function loadMonth(monthIndex, year, day, func) {
   let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   let month = months[monthIndex];
   let weekdayOfFirst = new Date(year, monthIndex, 1).getDay();
@@ -33,7 +33,7 @@ function loadMonth(monthIndex, year, func) {
 
   document.getElementById("current-month").innerHTML = `${month}<br></br>
             <span>${year}</span>`; // MAYBE JUST {month} IDK
-  createDays(numDays, numDays/*should be active day, this is a placeholder*/, weekdayOfFirst, func);
+  createDays(numDays, day/*should be active day, this is a placeholder*/, weekdayOfFirst, func);
           {/* <li>{month}<br></br>
             <span>2021</span>
           </li> */}
@@ -41,36 +41,24 @@ function loadMonth(monthIndex, year, func) {
   //const [month, setMonth] = useState(monthString);
 }
 
-function Calendar({setDay}) {
-  let dateobj = new Date();
-  let monthIndex = dateobj.getMonth();
-  let year = dateobj.getFullYear();
+function Calendar({date, setDay, changeMonth}) {
 
   // useEffect(() => {createDays(days, day, setDay)}, [day, days]); // replace with loadMonth?????????
+  let parts = date.split("-")
+  let monthIndex = parseInt(parts[0]) - 1
+  let year = parts[2]
   
-  useEffect(() => {loadMonth(monthIndex, year, setDay)}, [monthIndex, year]);
-
-  const changeMonth = (change) => {
-    monthIndex += change;
-    if (monthIndex < 0) {
-      monthIndex = 11;
-      year--;
-    } else if (monthIndex > 11) {
-      monthIndex = 0;
-      year++;
-    }
-    loadMonth(monthIndex, year, setDay)
-  }
+  useEffect(() => {loadMonth(monthIndex, year, parts[1], setDay)}, [date]);
 
   return (
     <>
       <div className="month">
         <ul>
           <li className="prev" onClick={() => {
-            changeMonth(-1);
+            changeMonth(-1, date);
           }}>Prev</li>
           <li className="next" onClick={() => {
-            changeMonth(1);
+            changeMonth(1, date);
           }}>Next</li>
           <li id="current-month"><br></br>
             <span></span>
