@@ -67,5 +67,5 @@ def get_events_day(date):
         
         if(not (dayStart > eventEnd or dayEnd < eventStart)):
             event_list[event["name"]] = event
-    print(event_list)
+    # print(event_list)
     return event_list 

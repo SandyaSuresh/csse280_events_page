@@ -35,13 +35,13 @@ def shutdown():
 #                           response = json.dumps(dataservice.get_events_list()))
 
 @app.get("/month/<month>") # formatted like MM/YY?
-def get_events(month):
+def get_month(month):
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_events_month(month)))  
 
 @app.get("/day/<event_date>")
-def get_events(event_date):
+def get_day(event_date):
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_events_day(event_date)))

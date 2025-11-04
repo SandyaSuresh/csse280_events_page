@@ -43,18 +43,8 @@ function loadMonth(monthIndex, year, func) {
 
 function Calendar({setDay}) {
   let dateobj = new Date();
-  // let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   let monthIndex = dateobj.getMonth();
   let year = dateobj.getFullYear();
-  // let monthString = months[monthIndex];
-  // let days  = new Date(year, monthIndex, 0).getDate();
-
-  // const [month, setMonth] = useState(monthString);
-  // const [day, setDay] = useState(days);
-
-  //console.log("monthString: " + monthString);
-  // setMonth(monthString);
-  // setDay(dateobj.getDate());
 
   // useEffect(() => {createDays(days, day, setDay)}, [day, days]); // replace with loadMonth?????????
   

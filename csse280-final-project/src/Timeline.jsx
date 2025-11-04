@@ -5,11 +5,10 @@ import './Timeline.css'
 
 function Timeline({json}) {
   // const [count, setCount] = useState(0)
+  // console.log(json)
   return (
     <>
-  <p>{json}</p>
-
-
+        <p>{json}</p>
     </>
   );
 };
