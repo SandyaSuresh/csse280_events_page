@@ -12,7 +12,7 @@ async function updateCalendarandTimeline(year, month, day){
   //MAKE GET REQUEST FOR EVENTS
   try {
       let format_day = day < 10 ? "0" + day : day
-      let response = await fetch("/events/" + month + "-" + format_day + "-" + year)
+      let response = await fetch("/day/" + month + "-" + format_day + "-" + year)
       if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
       }
