@@ -7,7 +7,7 @@ function createDays(numDays, activeDay, weekdayOfFirst, func){
   for (let i = 1; i <= weekdayOfFirst; i++) {
     let list_item = document.createElement("li");
     list_item.innerHTML = ""; // creates blank nodes for empty days
-    list.append(list_item);
+    list.appendChild(list_item);
   }
   for(let i = 1; i <= numDays; i++){
     let list_item = document.createElement("li");

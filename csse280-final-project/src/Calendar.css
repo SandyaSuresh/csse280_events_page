@@ -32,9 +32,11 @@ body {font-family: Verdana, sans-serif;}
 
 /* Weekdays (Mon-Sun) */
 .weekdays {
-  width: 50%;
+  width: 49%;
+  text-align: center;
   margin: 0;
   padding: 10px 0;
+  padding-right: 1%;
   background-color:#ddd;
 }
 
@@ -48,9 +50,12 @@ body {font-family: Verdana, sans-serif;}
 /* Days (1-31) */
 .days {
   padding: 10px 0;
-  width: 50%;
+  /* padding: 10px 0; */
+  width: 49%;
   background: #eee;
   margin: 0;
+  text-align: left;
+  padding-left: 1%;
 }
 
 .days li {
