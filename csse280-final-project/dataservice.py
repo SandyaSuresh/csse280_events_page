@@ -1,4 +1,5 @@
 import pickledb
+from datetime import datetime
 import os
 
 db_path = 'database.db'
@@ -12,10 +13,10 @@ def load_db():
 
     global_db = pickledb.PickleDB(db_path)
     global_db.set("users", {})
-    global_db.set("events", get_events(events_db))
+    global_db.set("events", load_events(events_db))
     global_db.save()    
 
-def get_events(db):
+def load_events(db):
     events = {}
     for event in db.all():
         events[event] = db.get(event)
@@ -39,7 +40,7 @@ def get_events_list():
     db = get_db()
     return db["events"]
 
-def get_events_list(month): # what about events that roll over into the next month?
+def get_events_month(month): # what about events that roll over into the next month?
     month_of_year = month.split("/")[0]
     year = month_of_year.split("/")[1]
     db = get_db()
@@ -50,3 +51,21 @@ def get_events_list(month): # what about events that roll over into the next mon
         if (event_month == month_of_year and event_year == year):
             events += event
     return events # probably formatted wrong or something
+
+def get_events_day(date):
+    dayStart  = datetime.strptime(date+" 00:00:00", "%m-%d-%Y %H:%M:%S")
+    dayEnd = datetime.strptime(date+" 23:59:59", "%m-%d-%Y %H:%M:%S")
+    db_events = get_db()["events"]
+    event_list={}
+    for index in db_events:
+        event = db_events[index]
+        start = event["start"]
+        end = event["end"]
+
+        eventStart = datetime.strptime(start, "%m/%d/%Y %H:%M:%S")
+        eventEnd = datetime.strptime(end, "%m/%d/%Y %H:%M:%S")
+        
+        if(not (dayStart > eventEnd or dayEnd < eventStart)):
+            event_list[event["name"]] = event
+    print(event_list)
+    return event_list 

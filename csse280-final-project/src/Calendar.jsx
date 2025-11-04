@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import {useEffect} from 'react'
 import './Calendar.css'
 
 function createDays(numDays, activeDay, weekdayOfFirst, func){
@@ -20,8 +20,9 @@ function createDays(numDays, activeDay, weekdayOfFirst, func){
     list_item.onclick = () => {func(i); createDays(numDays, i, weekdayOfFirst, func);}
     list.appendChild(list_item);
   }
-
-  document.getElementById("days-list").replaceChildren(list)
+  if(document.getElementById("days-list")){
+    document.getElementById("days-list").replaceChildren(list)
+  }
 }
 
 function loadMonth(monthIndex, year, func) {
@@ -40,16 +41,16 @@ function loadMonth(monthIndex, year, func) {
   //const [month, setMonth] = useState(monthString);
 }
 
-function Calendar() {
+function Calendar({setDay}) {
   let dateobj = new Date();
   // let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   let monthIndex = dateobj.getMonth();
   let year = dateobj.getFullYear();
   // let monthString = months[monthIndex];
-  let days  = new Date(year, monthIndex, 0).getDate();
+  // let days  = new Date(year, monthIndex, 0).getDate();
 
   // const [month, setMonth] = useState(monthString);
-  const [day, setDay] = useState(days);
+  // const [day, setDay] = useState(days);
 
   //console.log("monthString: " + monthString);
   // setMonth(monthString);
@@ -103,5 +104,4 @@ function Calendar() {
   );
 
 };
-
 export default Calendar;
