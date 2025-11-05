@@ -1,3 +1,7 @@
+.navbar {
+    text-align: center;
+}
+
 .navbar li, .foot li{
     color: white;
     display: inline;

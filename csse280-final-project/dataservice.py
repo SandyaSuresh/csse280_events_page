@@ -90,3 +90,13 @@ def add_user(username, password):
     db.set("users", users)
     db.save()
     return True
+
+def update_user_tags(username, tags):
+    db = get_db()
+    users = db["users"]
+    user = users[username]
+    user[tags] = tags
+    db.set(db["users"][username], user) # might be useless or wrong idk
+    db.save()
+    return tags
+    

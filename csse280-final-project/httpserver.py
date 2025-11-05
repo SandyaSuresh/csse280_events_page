@@ -62,8 +62,16 @@ def get_day(event_date):
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_events_day(event_date)))
- 
 
+@app.patch("/tags") # didn't put tags parameter as this should take the whole list from the form
+@jwt_required()
+def update_tags():
+    username = get_jwt_identity()
+    tags = flask.request.form["edit-tags"] # definitely wrong
+    # return flask.Response(status="200 OK",
+    #                       headers={"Content-Type": "application/json"},
+    #                       response = json.dumps(dataservice.update_user_tags(username, tags)))
+    return jsonify(dataservice.update_user_tags(username, tags))
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ function NavBar() {
       <ul>
         <li><a href="events.html">For You</a></li>
         <li><a href="explore.html">Explore</a></li>
-        <li><a href = "">Profile</a></li>
+        <li><a href="profile.html">Profile</a></li>
       </ul>
      </nav>
      </>
