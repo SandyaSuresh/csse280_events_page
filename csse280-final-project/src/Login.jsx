@@ -23,7 +23,7 @@ async function login() {
             alert("Login Failed");
             return; 
         }
-
+        console.log("help")
         localStorage.setItem("access_token", access_token);
         window.location.href = "/explore.html";
 

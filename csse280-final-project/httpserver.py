@@ -45,21 +45,26 @@ def login():
     return jsonify(access_token = access_token)
 
 @app.get("/shutdown")
+@jwt_required()
 def shutdown():
     os._exit(0)
 
-@app.get("/month/<month>") # formatted like MM/YY?
+@app.get("/month/<month>") # formatted like MM-DD-YYYY
+@jwt_required()
 def get_month(month):
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_events_month(month)))  
 
 @app.get("/day/<event_date>")
+@jwt_required()
 def get_day(event_date):
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_events_day(event_date)))
  
+
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)

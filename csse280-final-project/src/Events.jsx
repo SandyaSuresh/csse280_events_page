@@ -11,7 +11,16 @@ import './Events.css'
 async function updateCalendarandTimeline(date, json_func){
   //MAKE GET REQUEST FOR EVENTS
   try {
-      let response = await fetch("/day/" + date)
+        let options ={
+          method: "GET",
+        }
+        if(localStorage["access_token"]){
+          if(!options["headers"]){
+            options["headers"] = {}
+          }
+          options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+        }
+      let response = await fetch("/day/" + date, options)
       if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
       }
