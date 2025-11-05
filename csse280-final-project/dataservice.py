@@ -69,3 +69,24 @@ def get_events_day(date):
             event_list[event["name"]] = event
     # print(event_list)
     return event_list 
+
+def authenticate_user(username, password):
+    db = get_db()
+    users = db["users"]
+    #print(users)
+    if(not username in users):
+        return False
+    user = users[username]
+    if not "password" in user:
+        return False 
+    return user["password"] == password
+
+def add_user(username, password):
+    db = get_db()
+    users = db["users"]
+    if(username in users):
+        return False
+    users[username] = {"password": password, "tags" : [], "bookmarks" : []}
+    db.set("users", users)
+    db.save()
+    return True

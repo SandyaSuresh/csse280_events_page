@@ -24,15 +24,29 @@ app = flask.Flask(__name__,
 app.config['JWT_SECRET_KEY'] = "mysecretkey"
 jwt = JWTManager(app)
 
+@app.post("/account")
+def create_account():
+    username = flask.request.form['username']
+    password = flask.request.form['password']
+
+    if(not dataservice.add_user(username, password)):
+        return flask.Response(status=400)
+    else:
+        return flask.redirect("/login.html")
+    
+@app.post("/login")
+def login():
+    username = request.json['username']
+    password = request.json['password']
+
+    if(not dataservice.authenticate_user(username, password)):
+        return flask.Response(status=401)
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token = access_token)
+
 @app.get("/shutdown")
 def shutdown():
     os._exit(0)
-
-# @app.get("/events")
-# def get_events():
-#     return flask.Response(status="200 OK",
-#                           headers={"Content-Type": "application/json"},
-#                           response = json.dumps(dataservice.get_events_list()))
 
 @app.get("/month/<month>") # formatted like MM/YY?
 def get_month(month):

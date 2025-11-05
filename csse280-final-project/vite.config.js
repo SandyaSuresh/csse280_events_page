@@ -7,7 +7,8 @@ export default defineConfig({
   build: {
     rollupOptions:{
       input: {
-        'main': 'index.html',
+        'main': 'login.html',
+        'menu': 'index.html',
         'explore': 'explore.html',
         'events': 'events.html'
       }
