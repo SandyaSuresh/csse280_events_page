@@ -10,7 +10,8 @@ export default defineConfig({
         'main': 'login.html',
         'menu': 'index.html',
         'explore': 'explore.html',
-        'events': 'events.html'
+        'events': 'events.html',
+        'profile': 'profile.html'
       }
     }
   }

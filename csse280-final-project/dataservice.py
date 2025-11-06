@@ -12,7 +12,8 @@ def load_db():
     events_db.save()
 
     global_db = pickledb.PickleDB(db_path)
-    global_db.set("users", {})
+    if not "users" in global_db.all():
+        global_db.set("users", {})
     global_db.set("events", load_events(events_db))
     global_db.save()    
 

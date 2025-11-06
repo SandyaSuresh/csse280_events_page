@@ -17,8 +17,8 @@ async function login() {
                 })
             });
         
-        let reponseData = await response.json();
-        let access_token = reponseData["access_token"];
+        let responseData = await response.json();
+        let access_token = responseData["access_token"];
         if(!access_token){
             alert("Login Failed");
             return; 
