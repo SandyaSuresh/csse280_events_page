@@ -59,37 +59,72 @@ function changeMonth(diff, day, func) {
 }
 
 async function getTags() {
-  let response = await fetch("/tags", {
-    method:"PATCH",
-    headers:{
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      // "username": username,
-      // "password": password
-    })
+  let tagOptions = Array.from(document.getElementById("edit-tags").children);
+  let selected = '{"tags":[';
+  tagOptions.forEach((tag) => {
+    if (tag.selected) {
+      selected += `"${tag.value}",`;
+    }
   });
-
-  let responseData = await response.json();
+  selected = selected.slice(0, -1);
+  selected += "]}";
+  // let response = await fetch("/tags", {
+  //   method:"PATCH",
+    
+  //   headers:{
+  //     "Content-Type": "application/json",
+  //   },
+  //   if(localStorage["access_token"]) {
+  //         if(!options["headers"]){
+  //           options["headers"] = {}
+  //         }
+  //         options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+  //   },
+  //   body: JSON.stringify({
+  //     // "username": username,
+  //     // "password": password
+  //   })
+  // });
+  try {
+    let options = {
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: selected
+    }
+    if(localStorage["access_token"]){
+      if(!options["headers"]){
+        options["headers"] = {}
+      }
+      options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+    }
+    let response = await fetch("/tags", options)
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+  } catch (ex) {
+    console.error(ex);
+  }
 }
 
 function TagEditor() {
   return <>
-  <form action="/tags" method="PATCH" encType="application/x-www-form-urlencoded">
+  {/* <form action="/tags" method="PATCH" encType="application/x-www-form-urlencoded"> */}
     <label for="edit-tags">Edit Tags:</label>
     <select id="edit-tags" name="edit-tags" multiple> {/*HARD CODED, NEED A WAY TO GET ALL TAGS?*/}
-      <option value="computer science">computer science</option>
-      <option value="csse">csse</option>
-      <option value="learning">learning</option>
-      <option value="puzzles">puzzles</option>
-      <option value="thinking">thinking</option>
-      <option value="problem solving">problem solving</option>
-      <option value="school wide">school wide</option>
-      <option value="all majors">all majors</option>
-      <option value="hackathon">hackathon</option>
+      <option name="computer science" value="computer science">computer science</option>
+      <option name="csse" value="csse">csse</option>
+      <option name="learning" value="learning">learning</option>
+      <option name="puzzles" value="puzzles">puzzles</option>
+      <option name="thinking" value="thinking">thinking</option>
+      <option name="problem solving" value="problem solving">problem solving</option>
+      <option name="school wide" value="school wide">school wide</option>
+      <option name="all majors" value="all majors">all majors</option>
+      <option name="hackathon"value="hackathon">hackathon</option>
     </select>
-    <button type="submit" onClick={getTags}>Submit</button>
-  </form>
+    <button onClick={getTags}>Submit</button>
+  {/* </form> */}
   </>
 }
 

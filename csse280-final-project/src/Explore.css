@@ -49,3 +49,7 @@ input {
   margin-right: 10px;
   flex-shrink: 0;
 }
+
+div .p {
+  text-align: center
+}

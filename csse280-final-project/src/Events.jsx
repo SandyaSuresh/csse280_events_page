@@ -14,7 +14,7 @@ async function updateCalendarandTimeline(date, json_func){
       let options ={
         method: "GET",
       }
-      if(localStorage["access_token"]){
+      if(localStorage["access_token"]){ // create function for this?
         if(!options["headers"]){
           options["headers"] = {}
         }
