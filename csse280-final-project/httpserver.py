@@ -67,11 +67,9 @@ def get_day(event_date):
 @jwt_required()
 def update_tags():
     username = get_jwt_identity()
-    tags = flask.request.form["edit-tags"] # definitely wrong
-    # return flask.Response(status="200 OK",
-    #                       headers={"Content-Type": "application/json"},
-    #                       response = json.dumps(dataservice.update_user_tags(username, tags)))
-    return jsonify(dataservice.update_user_tags(username, tags))
+    tags = request.json["tags"]
+    dataservice.update_user_tags(username, tags)
+    return flask.Response(status="204 No Content")
 
 
 if __name__ == "__main__":
