@@ -12,7 +12,7 @@ function getCurrentDateFormatted() { // this code is somewhere else, replace wit
   return formatted_date;
 }
 
-function getRelevantEvents(json, tags) {
+function getRelevantEvents(json, tags) { // code could be a lot simpler i think!!!!!!!!!!!!!!!!!!
   let events_by_tags = {}
   for (let i=0; i<tags.length; i++) {
     events_by_tags[tags[i]] = [];
@@ -20,14 +20,10 @@ function getRelevantEvents(json, tags) {
   for (let i=0; i<tags.length; i++) {
     let tag = tags[i];
     for (let event in json) {
-      // if (tag in json[event]["tags"]) {
-      //   console.log("true")
-      //   events_by_tags[tag].push(event);
-      // }
       for (let j=0; j<json[event]["tags"].length; j++) {
         if (tag == json[event]["tags"][j]) {
-          events_by_tags[tag].push(event);
-          //break;
+          events_by_tags[tag].push({[event]: json[event]});
+          //break???????????????????? here?????????
         }
       }
     }
@@ -37,10 +33,6 @@ function getRelevantEvents(json, tags) {
 
 async function getEvents(json_func) {
   let tags = ["popular", "problem solving"];
-  // let events_by_tags = new Map();
-  // tags.forEach((tag) => {
-  //   events_by_tags.set(tag, []);
-  // })
   let todaysDate = getCurrentDateFormatted();
   let options = {
     method: "GET",
@@ -62,19 +54,37 @@ async function getEvents(json_func) {
   json_func(relevant_events);
 }
 
-function BoxRow({tag, eventNames}) {
-  // let title = document.createElement("h2");
-  // title.textContent = `${tag}`;
-  // let container = document.createElement("div")
-  // container.className = "container";
-  // eventNames.forEach((eventName) => {
-  //   let event = document.createElement("div");
-  //   event.className = "box";
-  //   let eventText = document.createElement("p");
-  //   eventText.textContent = `${eventName}`
-  //   event.appendChild(eventText);
-  //   container.appendChild(event);
-  // });
+async function addBookmark(eventId) {
+  let options = {
+    method: "POST",
+    headers:{
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      "event-id": eventId
+    })
+  }
+  if(localStorage["access_token"]){ // create function for this?
+    if(!options["headers"]){
+      options["headers"] = {}
+    }
+    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+  }
+  let response = await fetch("/bookmark", options);
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`)
+  }
+}
+
+function BoxRow({tag, eventArray}) {
+  let eventNames = [];
+  let eventNamesToIds = {};
+  for (let eventObject of eventArray) {
+    let eventName = Object.values(eventObject)[0]["name"];
+    let eventId = Object.keys(eventObject)[0];
+    eventNames.push(eventName);
+    eventNamesToIds[eventName] = eventId;
+  }
   return (
     <div>
       <h2>{tag}</h2>
@@ -82,6 +92,7 @@ function BoxRow({tag, eventNames}) {
         {eventNames.map((eventName, i) => (
           <div key={i} className="box">
             <p>{eventName}</p>
+            <p onClick={() => addBookmark(eventNamesToIds[eventName])}>Bookmark</p>
           </div>
         ))}
       </div>
@@ -90,29 +101,14 @@ function BoxRow({tag, eventNames}) {
 }
 
 function Explore() {
-  // let events = None;
-  // const [json, setJSON] = useState("");
-  // useEffect(() => {
-  //   events = getEvents(setJSON);
-  // }, [setJSON]); // ???????????????????????
   const [events, setEvents] = useState("")
 
-
-  // let boxRows=[]; //!!!!!!!!!!
   useEffect(() => {
     getEvents(setEvents);
+  }, []);
 
-    // boxRows = []; // declared before useEffect()
-    // let tags = events;
-
-    // for (let tag in tags) {
-    //   console.log(tag);
-    //   boxRows.push(<BoxRow tag={tag} eventNames={events[tag]}></BoxRow>);
-    // }
-    // boxRows = boxRows.map(boxRow => {boxRow});
-  }, [events, setEvents]);
   let boxRows = Object.keys(events).map(tag => (
-    <BoxRow key={tag} tag={tag} eventNames={events[tag]} />
+    <BoxRow key={tag} tag={tag} eventArray={events[tag]} />
   ));
 
   return (
@@ -122,78 +118,6 @@ function Explore() {
         <input type="text" placeholder="search"></input>
       </div>
       {boxRows}
-      {/* <h2>Popular Today!</h2>
-      <div className="container">
-        <div className="box"><p>Test</p></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-      </div>
-      <h2>Sporting Events</h2>
-      <div className="container">
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-      </div>
-      <h2>Multi-Day</h2>
-      <div className="container">
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-      </div>
-      <h2>General Meetings</h2>
-      <div className="container">
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-        <div className="box"></div>
-      </div> */}
     </>
   )
 }

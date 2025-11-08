@@ -67,7 +67,7 @@ def get_events_day(date):
         eventEnd = datetime.strptime(end, "%m/%d/%Y %H:%M:%S")
         
         if(not (dayStart > eventEnd or dayEnd < eventStart)):
-            event_list[event["name"]] = event
+            event_list[index] = event
     # print(event_list)
     return event_list 
 
@@ -100,4 +100,13 @@ def update_user_tags(username, tags):
     # db.set(db["users"][username], user) # might be useless or wrong idk
     db.save()
     return tags
+
+def add_bookmark(username, eventId):
+    db = get_db()
+    users = db["users"]
+    user = users[username]
+    if (eventId not in user["bookmarks"]):
+        user["bookmarks"].append(eventId)
+    db.save()
+    return user["bookmarks"] # ??? does it matter
     

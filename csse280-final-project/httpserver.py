@@ -71,6 +71,14 @@ def update_tags():
     dataservice.update_user_tags(username, tags)
     return flask.Response(status="204 No Content")
 
+@app.post("/bookmark")
+@jwt_required()
+def add_bookmark():
+    username = get_jwt_identity()
+    eventId = request.json["event-id"]
+    dataservice.add_bookmark(username, eventId)
+    return flask.Response(status="204 No Content") # not sure what should be returned here
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
