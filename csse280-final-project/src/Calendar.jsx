@@ -52,6 +52,7 @@ function Calendar({date, setDay, changeMonth}) {
 
   return (
     <>
+      <div id="calendar">
       <div className="month">
         <ul>
           <li className="prev" onClick={() => {
@@ -77,6 +78,7 @@ function Calendar({date, setDay, changeMonth}) {
       </ul>
       <div id="days-list">
         
+      </div>
       </div>
      </>
   );

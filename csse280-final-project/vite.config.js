@@ -12,7 +12,7 @@ export default defineConfig({
         'menu': 'index.html',
         'explore': 'explore.html',
         'events': 'events.html',
-        'profile': 'profile.html'
+        'profile': 'profile.html',
       }
     }
   }
