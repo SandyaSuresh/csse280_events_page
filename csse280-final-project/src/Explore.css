@@ -53,3 +53,11 @@ input {
 div p {
   text-align: center
 }
+
+.bookmarked {
+  color: gold
+}
+
+.hidden {
+  display:none;
+}

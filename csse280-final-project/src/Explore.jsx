@@ -74,6 +74,32 @@ async function addBookmark(eventId) {
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`)
   }
+  document.getElementById("bookmark" + eventId).className = "hidden";
+  document.getElementById("bookmarked" + eventId).className = "bookmarked";
+}
+
+async function deleteBookmark(eventId) {
+  let options = {
+    method: "DELETE",
+    headers:{
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      "event-id": eventId
+    })
+  }
+  if(localStorage["access_token"]){ // create function for this?
+    if(!options["headers"]){
+      options["headers"] = {}
+    }
+    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+  }
+  let response = await fetch("/bookmark", options);
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`)
+  }
+  document.getElementById("bookmark" + eventId).className = "";
+  document.getElementById("bookmarked" + eventId).className = "hidden bookmarked";
 }
 
 function BoxRow({tag, eventArray}) {
@@ -92,7 +118,8 @@ function BoxRow({tag, eventArray}) {
         {eventNames.map((eventName, i) => (
           <div key={i} className="box">
             <p>{eventName}</p>
-            <p onClick={() => addBookmark(eventNamesToIds[eventName])}>Bookmark</p>
+            <p id={`bookmark${eventNamesToIds[eventName]}`} onClick={() => addBookmark(eventNamesToIds[eventName])}>Bookmark</p>
+            <p id={`bookmarked${eventNamesToIds[eventName]}`} className="hidden bookmarked" onClick={() => deleteBookmark(eventNamesToIds[eventName])}>Bookmarked!</p>
           </div>
         ))}
       </div>

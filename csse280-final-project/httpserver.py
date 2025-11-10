@@ -71,12 +71,28 @@ def update_tags():
     dataservice.update_user_tags(username, tags)
     return flask.Response(status="204 No Content")
 
+# @app.get("/bookmarks")
+# @jwt_required()
+# def get_bookmarks():
+#     username = get_jwt_identity()
+#     return flask.Response(status="200 OK",
+#                           headers={"Content-Type": "application/json"},
+#                           response = json.dumps(dataservice.get_bookmarks(username)))
+
 @app.post("/bookmark")
 @jwt_required()
 def add_bookmark():
     username = get_jwt_identity()
     eventId = request.json["event-id"]
     dataservice.add_bookmark(username, eventId)
+    return flask.Response(status="204 No Content") # not sure what should be returned here
+
+@app.delete("/bookmark")
+@jwt_required()
+def delete_bookmark():
+    username = get_jwt_identity()
+    eventId = request.json["event-id"]
+    dataservice.delete_bookmark(username, eventId)
     return flask.Response(status="204 No Content") # not sure what should be returned here
 
 

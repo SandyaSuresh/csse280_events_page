@@ -101,6 +101,12 @@ def update_user_tags(username, tags):
     db.save()
     return tags
 
+# def get_bookmarks(username):
+#     db = get_db()
+#     users = db["users"]
+#     user = users[username]
+#     return user["bookmarks"]
+
 def add_bookmark(username, eventId):
     db = get_db()
     users = db["users"]
@@ -108,5 +114,14 @@ def add_bookmark(username, eventId):
     if (eventId not in user["bookmarks"]):
         user["bookmarks"].append(eventId)
     db.save()
-    return user["bookmarks"] # ??? does it matter
+    return True # return value not currently used, might be unnecessary
+
+def delete_bookmark(username, eventId):
+    db = get_db()
+    users = db["users"]
+    user = users[username]
+    if (eventId in user["bookmarks"]):
+        user["bookmarks"].remove(eventId)
+    db.save()
+    return True # return value not currently used, might be unnecessary
     
