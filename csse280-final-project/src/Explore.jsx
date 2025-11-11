@@ -102,6 +102,35 @@ async function deleteBookmark(eventId) {
   document.getElementById("bookmarked" + eventId).className = "hidden bookmarked";
 }
 
+async function renderBookmarks(events) {
+  let options = {
+    method: "GET",
+  }
+  if(localStorage["access_token"]){ // create function for this?
+    if(!options["headers"]){
+      options["headers"] = {}
+    }
+    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+  }
+  let response = await fetch("/bookmarks", options);
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`)
+  }
+  let bookmarkedEventIds = await response.json();
+
+  for (let tag of Object.keys(events)) {
+    for (let event of events[tag]) {
+      let eventId = Object.keys(event)[0];
+      if (bookmarkedEventIds.indexOf(eventId) > -1) { // checks if eventId is in bookmarkedEventIds
+        document.getElementById("bookmark" + eventId).className = "hidden";
+        document.getElementById("bookmarked" + eventId).className = "bookmarked";
+      }
+  }
+}
+  
+  return bookmarkedEventIds
+}
+
 function BoxRow({tag, eventArray}) {
   let eventNames = [];
   let eventNamesToIds = {};
@@ -134,9 +163,15 @@ function Explore() {
     getEvents(setEvents);
   }, []);
 
+  useEffect(() => {
+    renderBookmarks(events);
+  }, [events])
+
   let boxRows = Object.keys(events).map(tag => (
     <BoxRow key={tag} tag={tag} eventArray={events[tag]} />
   ));
+
+
 
   return (
     <>

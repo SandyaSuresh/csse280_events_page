@@ -101,11 +101,11 @@ def update_user_tags(username, tags):
     db.save()
     return tags
 
-# def get_bookmarks(username):
-#     db = get_db()
-#     users = db["users"]
-#     user = users[username]
-#     return user["bookmarks"]
+def get_bookmarks(username):
+    db = get_db()
+    users = db["users"]
+    user = users[username]
+    return user["bookmarks"]
 
 def add_bookmark(username, eventId):
     db = get_db()
