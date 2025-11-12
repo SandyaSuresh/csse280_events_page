@@ -4,6 +4,15 @@ import { createRoot } from 'react-dom/client'
 import NavBar from './NavBar'
 import './Explore.css'
 
+function addAuthHeader(options) {
+  if(localStorage["access_token"]){ // create function for this?
+    if(!options["headers"]){
+      options["headers"] = {}
+    }
+    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+  }
+}
+
 function getCurrentDateFormatted() { // this code is somewhere else, replace with function?
   let date = new Date();
   let format_day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
@@ -47,12 +56,7 @@ async function getEventsInRange(json_func) {
   let options = {
     method: "GET",
   }
-  if(localStorage["access_token"]){ // create function for this?
-    if(!options["headers"]){
-      options["headers"] = {}
-    }
-    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
-  }
+  addAuthHeader(options);
   let response = await fetch("/events/" + dateRange, options);
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`)
@@ -64,27 +68,10 @@ async function getEventsInRange(json_func) {
   json_func(relevant_events);
 }
 
-async function getEvents(json_func) {
-  let tags = ["popular", "problem solving"];
-  let todaysDate = getCurrentDateFormatted();
-  let options = {
-    method: "GET",
-  }
-  if(localStorage["access_token"]){ // create function for this?
-    if(!options["headers"]){
-      options["headers"] = {}
-    }
-    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
-  }
-  let response = await fetch("/day/" + todaysDate, options);
-  if (!response.ok) {
-    throw new Error(`Response status: ${response.status}`)
-  }
-  let json = await response.json();
-
-  let relevant_events = getRelevantEvents(json, tags);
-
-  json_func(relevant_events);
+async function getAllFutureEvents(json_func) {
+  document.getElementById("start").value = getCurrentDateFormatted();
+  document.getElementById("end").value = "12-31-2099";
+  getEventsInRange(json_func);
 }
 
 async function addBookmark(eventId) {
@@ -97,12 +84,7 @@ async function addBookmark(eventId) {
       "event-id": eventId
     })
   }
-  if(localStorage["access_token"]){ // create function for this?
-    if(!options["headers"]){
-      options["headers"] = {}
-    }
-    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
-  }
+  addAuthHeader(options);
   let response = await fetch("/bookmark", options);
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`)
@@ -125,12 +107,7 @@ async function deleteBookmark(eventId) {
       "event-id": eventId
     })
   }
-  if(localStorage["access_token"]){ // create function for this?
-    if(!options["headers"]){
-      options["headers"] = {}
-    }
-    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
-  }
+  addAuthHeader(options);
   let response = await fetch("/bookmark", options);
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`)
@@ -154,12 +131,7 @@ async function renderBookmarks(events) {
   let options = {
     method: "GET",
   }
-  if(localStorage["access_token"]){ // create function for this?
-    if(!options["headers"]){
-      options["headers"] = {}
-    }
-    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
-  }
+  addAuthHeader(options);
   let response = await fetch("/bookmarks", options);
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`)
@@ -236,7 +208,7 @@ function militaryTo12HourTime(date) {
   return newDate;
 }
 
-function renderViewedEvent(eventId, eventsData) {
+function renderViewedEvent(eventId, eventsData, updateViewedEventFunc) {
   let eventName, eventTags, eventStart, eventEnd, eventGroup = "";
 
   if (eventId == -1) {
@@ -264,12 +236,13 @@ function renderViewedEvent(eventId, eventsData) {
       }
     }
     return (
-    <div>
+    <section id="event-info" className="">
+      <button onClick={() => {updateViewedEventFunc(-1); renderViewedEvent(-1, eventsData)}}>x</button>
       <strong>{eventName}</strong>
       <p>Time: {eventStart} to {eventEnd}</p>
       <p>Group: {eventGroup}</p>
       <p>Tags: {eventTags}</p>
-    </div>
+    </section>
     )
   }
 }
@@ -280,7 +253,7 @@ function Explore() {
   const [viewedEventBox, setViewedEventBox] = useState(<></>);
 
   useEffect(() => {
-    getEventsInRange(setEvents);
+    getAllFutureEvents(setEvents);
   }, []);
 
   useEffect(() => {
@@ -288,7 +261,7 @@ function Explore() {
   }, [events])
 
   useEffect(() => {
-    setViewedEventBox(renderViewedEvent(viewedEvent, events));
+    setViewedEventBox(renderViewedEvent(viewedEvent, events, setViewedEvent));
   }, [viewedEvent, events])
 
   let boxRows = Object.keys(events).map(tag => (

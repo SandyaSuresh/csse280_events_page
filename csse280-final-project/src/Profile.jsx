@@ -141,7 +141,7 @@ function Profile(){
   {/* <Calendar year={year} month={month} day={day} 
             changeYear={(i) => {setYear(i)}} changeMonth={(i) => {setMonth(i)}} changeDay={(i) => {setDay(i)}}></Calendar> */}
   <Calendar date={date} setDay={(i) => setDay(i, date, setDate)} changeMonth={(i) => {changeMonth(i, date, setDate)}} />
-  <Timeline json={json}></Timeline>
+  <Timeline json={json} date={date}></Timeline>
   <TagEditor></TagEditor>
   </>
   );

@@ -59,6 +59,27 @@ strong {
   text-align: center;
 }
 
+#event-info {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  right: 20%;
+  bottom: 20%;
+  width: 50%;
+  height: 50%;
+  border: 3px solid black;
+  background-color: lightgray;
+  position: fixed;
+  font-size: 1.5em;
+  button {
+    margin: 10px;
+    font-size: 1em;
+    
+    width: 8%;
+    height: 12%;
+  }
+}
+
 .bookmarked {
   color: gold
 }
