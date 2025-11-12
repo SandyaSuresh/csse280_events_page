@@ -23,3 +23,19 @@
 .clear{
   clear: both;
 }
+
+#container-div {
+  flex-direction:column;
+  padding: 10px;
+  margin: 0px;
+  float: right;
+  height: 80vh;
+  width: 25vw;
+  overflow-y:scroll
+}
+#calendar{
+  display: inline;
+  float: left;
+  width: 60vw;
+  height: 80vh;
+}

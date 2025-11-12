@@ -3,24 +3,44 @@
 }
 
 .eventspan{
-  border: 2px solid black;
-  height: 10px;
+  height: 100%;
   width: 10px;
   display: flexbox;
   flex: 1 1 auto;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+.show-hour{
+  border-top: 1px solid black;
+}
+.show-half-hour{
+  border-top: 1px dashed black;
 }
 
+.first-event-div{
+  border-top: 1px solid black;
+}
+.last-event-div{
+  border-bottom: 1px solid black;
+}
 .timespan{
-  border: 1px dashed black;
-  height: 10px;
-  width: 80%;
+  justify-content: space-evenly;
+  height: 5%;
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
 
-#container-div{
-  flex-direction: column;
-  overflow-y: scroll;
-  height: 60px;
-  width: 10vw;
+#container-div {
+  flex-direction:column;
+  padding: 10px;
+  margin: 0px;
+  float: right;
+  height: 80vh;
+  width: 25vw;
+  overflow-y:scroll
+}
+
+h3{
+  color: black;
 }
