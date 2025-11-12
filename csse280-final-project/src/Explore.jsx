@@ -101,8 +101,12 @@ async function addBookmark(eventId) {
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`)
   }
-  document.getElementById("bookmark" + eventId).className = "hidden";
-  document.getElementById("bookmarked" + eventId).className = "bookmarked";
+  for (let element of document.getElementsByClassName("bookmark" + eventId)) {
+    element.classList.add("hidden");
+  }
+  for (let element of document.getElementsByClassName("bookmarked" + eventId)) {
+    element.classList.remove("hidden");
+  }
 }
 
 async function deleteBookmark(eventId) {
@@ -125,8 +129,19 @@ async function deleteBookmark(eventId) {
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`)
   }
-  document.getElementById("bookmark" + eventId).className = "";
-  document.getElementById("bookmarked" + eventId).className = "hidden bookmarked";
+  for (let element of document.getElementsByClassName("bookmark" + eventId)) {
+    element.classList.remove("hidden");
+  }
+  for (let element of document.getElementsByClassName("bookmarked" + eventId)) {
+    element.classList.add("hidden");
+  }
+
+  // document.getElementsByClassName("bookmark" + eventId).forEach((element) => {
+  //   element.classList.remove("hidden");
+  // });
+  // document.getElementsByClassName("bookmarked" + eventId).forEach((element) => {
+  //   element.classList.add("hidden");
+  // });
 }
 
 async function renderBookmarks(events) {
@@ -149,12 +164,21 @@ async function renderBookmarks(events) {
     for (let event of events[tag]) {
       let eventId = Object.keys(event)[0];
       if (bookmarkedEventIds.indexOf(eventId) > -1) { // checks if eventId is in bookmarkedEventIds
-        document.getElementById("bookmark" + eventId).className = "hidden";
-        document.getElementById("bookmarked" + eventId).className = "bookmarked";
+        for (let element of document.getElementsByClassName("bookmark" + eventId)) {
+          element.classList.add("hidden");
+        }
+        for (let element of document.getElementsByClassName("bookmarked" + eventId)) {
+          element.classList.remove("hidden");
+        }
+        // document.getElementsByClassName("bookmark" + eventId).forEach((element) => {
+        //   element.classList.add("hidden");
+        // });
+        // document.getElementsByClassName("bookmarked" + eventId).forEach((element) => {
+        //   element.classList.remove("hidden");
+        // });
       }
+    }
   }
-}
-  
   return bookmarkedEventIds
 }
 
@@ -173,9 +197,9 @@ function BoxRow({tag, eventArray, viewEventFunc}) {
       <div className="container">
         {eventNames.map((eventName, i) => (
           <div key={i} className="box">
-            <p id={`nameOfEventId${namesToIds[eventName]}`} onClick={() => viewEventFunc(namesToIds[eventName])}>{eventName}</p>
-            <p id={`bookmark${namesToIds[eventName]}`} onClick={() => addBookmark(namesToIds[eventName])}>Bookmark</p> {/*better notation?????*/}
-            <p id={`bookmarked${namesToIds[eventName]}`} className="hidden bookmarked" onClick={() => deleteBookmark(namesToIds[eventName])}>Bookmarked!</p>
+            <p className={`nameOfEventId${namesToIds[eventName]}`} onClick={() => viewEventFunc(namesToIds[eventName])}>{eventName}</p>
+            <p className={`bookmark${namesToIds[eventName]}`} onClick={() => addBookmark(namesToIds[eventName])}>Bookmark</p> {/*better notation?????*/}
+            <p className={`hidden bookmarked bookmarked${namesToIds[eventName]}`} onClick={() => deleteBookmark(namesToIds[eventName])}>Bookmarked!</p>
           </div>
         ))}
       </div>
