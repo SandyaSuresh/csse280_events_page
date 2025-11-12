@@ -32,9 +32,15 @@ function getRelevantEvents(json, tags) { // code could be a lot simpler i think!
 }
 
 async function getEventsInRange(json_func) {
-  let tags = ["popular", "problem solving"];
+  let tags = ["popular", "problem solving", "computer science", "hackathon", "all majors", "thinking", "csse"];
   let startDate = document.getElementById("start").value;
+  if (startDate == "") {
+    startDate = getCurrentDateFormatted();
+  }
   let endDate = document.getElementById("end").value;
+  if (endDate == "") {
+    endDate = "12-31-2099";
+  }
   let dateRange = startDate + " " + endDate;
 
   // let todaysDate = getCurrentDateFormatted();
@@ -274,7 +280,7 @@ function Explore() {
   const [viewedEventBox, setViewedEventBox] = useState(<></>);
 
   useEffect(() => {
-    getEvents(setEvents);
+    getEventsInRange(setEvents);
   }, []);
 
   useEffect(() => {
@@ -295,9 +301,11 @@ function Explore() {
     <>
       <div className="top">
         <h1>Explore Page</h1>
-        <input type="text" id="start" placeholder="Start date: (MM-DD-YYYY)"></input>
-        <input type="text" id="end" placeholder="End date: (MM-DD-YYYY)"></input>
-        <button onClick={() => getEventsInRange(setEvents)}>Find events!</button>
+        <form>
+          <input type="text" id="start" pattern="\d\d-\d\d-\d\d\d\d" placeholder="Start date: (MM-DD-YYYY)"></input>
+          <input type="text" id="end" pattern="\d\d-\d\d-\d\d\d\d" placeholder="End date: (MM-DD-YYYY)"></input>
+          <button type="submit" onClick={() => getEventsInRange(setEvents)}>Find events!</button>
+        </form>
       </div>
       {boxRows}
       {viewedEventBox}
