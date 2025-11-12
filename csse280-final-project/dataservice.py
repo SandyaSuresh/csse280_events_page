@@ -71,6 +71,24 @@ def get_events_day(date):
     # print(event_list)
     return event_list 
 
+def get_events_date_range(dateRange):
+    startDate = datetime.strptime(dateRange[0:10]+" 00:00:00", "%m-%d-%Y %H:%M:%S")
+    endDate = datetime.strptime(dateRange[11:]+" 23:59:59", "%m-%d-%Y %H:%M:%S")
+    db_events = get_db()["events"]
+    event_list={}
+    for index in db_events:
+        event = db_events[index]
+        start = event["start"]
+        end = event["end"]
+
+        eventStart = datetime.strptime(start, "%m/%d/%Y %H:%M:%S")
+        eventEnd = datetime.strptime(end, "%m/%d/%Y %H:%M:%S")
+        
+        if(not (startDate > eventEnd or endDate < eventStart)):
+            event_list[index] = event
+    # print(event_list)
+    return event_list
+
 def authenticate_user(username, password):
     db = get_db()
     users = db["users"]

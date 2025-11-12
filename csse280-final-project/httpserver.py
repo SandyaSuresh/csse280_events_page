@@ -63,6 +63,13 @@ def get_day(event_date):
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_events_day(event_date)))
 
+@app.get("/events/<daterange>") # formatted MM-DD-YYYY MM-DD-YYYY (startDate endDate)
+@jwt_required()
+def get_date_range(daterange):
+    return flask.Response(status="200 OK",
+                        headers={"Content-Type": "application/json"},
+                        response = json.dumps(dataservice.get_events_date_range(daterange)))
+
 @app.patch("/tags") # didn't put tags parameter as this should take the whole list from the form
 @jwt_required()
 def update_tags():

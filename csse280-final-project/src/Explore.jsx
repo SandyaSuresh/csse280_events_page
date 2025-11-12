@@ -31,6 +31,33 @@ function getRelevantEvents(json, tags) { // code could be a lot simpler i think!
   return events_by_tags;
 }
 
+async function getEventsInRange(json_func) {
+  let tags = ["popular", "problem solving"];
+  let startDate = document.getElementById("start").value;
+  let endDate = document.getElementById("end").value;
+  let dateRange = startDate + " " + endDate;
+
+  // let todaysDate = getCurrentDateFormatted();
+  let options = {
+    method: "GET",
+  }
+  if(localStorage["access_token"]){ // create function for this?
+    if(!options["headers"]){
+      options["headers"] = {}
+    }
+    options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+  }
+  let response = await fetch("/events/" + dateRange, options);
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`)
+  }
+  let json = await response.json();
+
+  let relevant_events = getRelevantEvents(json, tags);
+
+  json_func(relevant_events);
+}
+
 async function getEvents(json_func) {
   let tags = ["popular", "problem solving"];
   let todaysDate = getCurrentDateFormatted();
@@ -131,14 +158,14 @@ async function renderBookmarks(events) {
   return bookmarkedEventIds
 }
 
-function BoxRow({tag, eventArray}) {
+function BoxRow({tag, eventArray, viewEventFunc}) {
   let eventNames = [];
-  let eventNamesToIds = {};
+  let namesToIds = {};
   for (let eventObject of eventArray) {
     let eventName = Object.values(eventObject)[0]["name"];
     let eventId = Object.keys(eventObject)[0];
     eventNames.push(eventName);
-    eventNamesToIds[eventName] = eventId;
+    namesToIds[eventName] = eventId;
   }
   return (
     <div>
@@ -146,9 +173,9 @@ function BoxRow({tag, eventArray}) {
       <div className="container">
         {eventNames.map((eventName, i) => (
           <div key={i} className="box">
-            <p>{eventName}</p>
-            <p id={`bookmark${eventNamesToIds[eventName]}`} onClick={() => addBookmark(eventNamesToIds[eventName])}>Bookmark</p>
-            <p id={`bookmarked${eventNamesToIds[eventName]}`} className="hidden bookmarked" onClick={() => deleteBookmark(eventNamesToIds[eventName])}>Bookmarked!</p>
+            <p id={`nameOfEventId${namesToIds[eventName]}`} onClick={() => viewEventFunc(namesToIds[eventName])}>{eventName}</p>
+            <p id={`bookmark${namesToIds[eventName]}`} onClick={() => addBookmark(namesToIds[eventName])}>Bookmark</p> {/*better notation?????*/}
+            <p id={`bookmarked${namesToIds[eventName]}`} className="hidden bookmarked" onClick={() => deleteBookmark(namesToIds[eventName])}>Bookmarked!</p>
           </div>
         ))}
       </div>
@@ -156,8 +183,71 @@ function BoxRow({tag, eventArray}) {
   );
 }
 
+// function EventView() {
+//   return <p>Test</p>
+// }
+function militaryTo12HourTime(date) {
+  let hour = parseInt(date.slice(11, 13));
+  let minute = parseInt(date.slice(14, 16));
+  if (minute < 10) {
+    minute = "0" + minute;
+  }
+  let extension = "";
+  if (hour >= 12) {
+    extension = " p.m."
+    hour -= 12;
+    if (hour < 10) {
+      hour = parseInt("0" + hour);
+    }
+  } else {
+    extension = " a.m."
+  }
+  let newDate = date.slice(0, 11) + hour + ":" + minute + extension;
+  return newDate;
+}
+
+function renderViewedEvent(eventId, eventsData) {
+  let eventName, eventTags, eventStart, eventEnd, eventGroup = "";
+
+  if (eventId == -1) {
+    return <></>; // ???????????????????????????????????
+  } else {
+    for (let eventsInCategory of Object.values(eventsData)) {
+      for (let eventObj of eventsInCategory) {
+        console.log(eventObj);
+        console.log(Object.keys(eventObj));
+        console.log(Object.values(eventObj));
+        // console.log(Object.keys(Object.values(eventObj)));
+        // console.log(Object.values(Object.keys(eventObj)));
+        if (Object.keys(eventObj)[0] == eventId) {
+          let event = Object.values(eventObj)[0];
+          eventName = event["name"]
+          eventTags = event["tags"].join(", ")
+          eventStart = militaryTo12HourTime(event["start"])
+          if (event["start"].slice(0, 10) == event["end"].slice(0, 10)) {
+            eventEnd = militaryTo12HourTime(event["end"]).slice(11);
+          } else {
+            eventEnd = militaryTo12HourTime(event["end"]);
+          }
+          eventGroup = event["group"];
+        }
+      }
+    }
+    return (
+    <div>
+      <strong>{eventName}</strong>
+      <p>Time: {eventStart} to {eventEnd}</p>
+      <p>Group: {eventGroup}</p>
+      <p>Tags: {eventTags}</p>
+    </div>
+    )
+  }
+}
+
 function Explore() {
   const [events, setEvents] = useState("")
+  const [viewedEvent, setViewedEvent] = useState(-1)
+  const [viewedEventBox, setViewedEventBox] = useState(<></>);
 
   useEffect(() => {
     getEvents(setEvents);
@@ -167,8 +257,12 @@ function Explore() {
     renderBookmarks(events);
   }, [events])
 
+  useEffect(() => {
+    setViewedEventBox(renderViewedEvent(viewedEvent, events));
+  }, [viewedEvent, events])
+
   let boxRows = Object.keys(events).map(tag => (
-    <BoxRow key={tag} tag={tag} eventArray={events[tag]} />
+    <BoxRow key={tag} tag={tag} eventArray={events[tag]} viewEventFunc={setViewedEvent} />
   ));
 
 
@@ -176,10 +270,13 @@ function Explore() {
   return (
     <>
       <div className="top">
-        <h1>Explore Page</h1> 
-        <input type="text" placeholder="search"></input>
+        <h1>Explore Page</h1>
+        <input type="text" id="start" placeholder="Start date: (MM-DD-YYYY)"></input>
+        <input type="text" id="end" placeholder="End date: (MM-DD-YYYY)"></input>
+        <button onClick={() => getEventsInRange(setEvents)}>Find events!</button>
       </div>
       {boxRows}
+      {viewedEventBox}
     </>
   )
 }
