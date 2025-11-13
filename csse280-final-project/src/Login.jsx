@@ -16,10 +16,12 @@ async function login() {
                     "password": password
                 })
             });
-        
+        if (response.status == 401) {
+            alert("Invalid username or password!")
+        }
         let responseData = await response.json();
         let access_token = responseData["access_token"];
-        if(!access_token){
+        if(!access_token){ // Is this needed???????????? what causes this
             alert("Login Failed");
             return; 
         }

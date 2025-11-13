@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { useRef } from 'react'
 import NavBar from './NavBar'
 import './Explore.css'
 
@@ -12,6 +13,15 @@ function addAuthHeader(options) {
     options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
   }
 }
+
+// function isFirstRender() {
+//   const isFirst = useRef(true);
+//   if (isFirst.current) {
+//     isFirst.current = false;
+//     return true;
+//   }
+//   return false;
+// }
 
 function getCurrentDateFormatted() { // this code is somewhere else, replace with function?
   let date = new Date();
@@ -40,19 +50,20 @@ function getRelevantEvents(json, tags) { // code could be a lot simpler i think!
   return events_by_tags;
 }
 
-async function getEventsInRange(json_func) {
-  let tags = ["popular", "problem solving", "computer science", "hackathon", "all majors", "thinking", "csse"];
+async function getEvents(eventSetterFunc) {
   let startDate = document.getElementById("start").value;
-  if (startDate == "") {
-    startDate = getCurrentDateFormatted();
-  }
   let endDate = document.getElementById("end").value;
-  if (endDate == "") {
-    endDate = "12-31-2099";
+  let pattern = /^\d\d-\d\d-\d\d\d\d$/;
+  if (!pattern.test(startDate) || !pattern.test(endDate)) {
+    alert("Dates must be in MM-DD-YYYY format.")
   }
   let dateRange = startDate + " " + endDate;
 
-  // let todaysDate = getCurrentDateFormatted();
+  return await getEventsInRange(eventSetterFunc, dateRange);
+}
+
+async function getEventsInRange(eventSetterFunc, dateRange) {
+  let tags = ["popular", "problem solving", "computer science", "hackathon", "all majors", "thinking", "csse"];
   let options = {
     method: "GET",
   }
@@ -65,13 +76,7 @@ async function getEventsInRange(json_func) {
 
   let relevant_events = getRelevantEvents(json, tags);
 
-  json_func(relevant_events);
-}
-
-async function getAllFutureEvents(json_func) {
-  document.getElementById("start").value = getCurrentDateFormatted();
-  document.getElementById("end").value = "12-31-2099";
-  getEventsInRange(json_func);
+  eventSetterFunc(relevant_events);
 }
 
 async function addBookmark(eventId) {
@@ -251,9 +256,21 @@ function Explore() {
   const [events, setEvents] = useState("")
   const [viewedEvent, setViewedEvent] = useState(-1)
   const [viewedEventBox, setViewedEventBox] = useState(<></>);
+  // const [startDate, setStartDate] = useState(""); // happens every time, causing problems, maybe remove and start from scratch
+  // const [endDate, setEndDate] = useState("");
+
+  // useEffect(() => {
+  //   if (startDate == "" && endDate == "") {
+  //     setStartDate(getCurrentDateFormatted());
+  //     setEndDate("12-31-2099");
+  //   } else {
+  //     setStartDate(document.getElementById("start").value);
+  //     setEndDate(document.getElementById("end").value);
+  //   }
+  // }, []);
 
   useEffect(() => {
-    getAllFutureEvents(setEvents);
+    getEventsInRange(setEvents, `${getCurrentDateFormatted()}` + " 12-31-2099");
   }, []);
 
   useEffect(() => {
@@ -277,7 +294,12 @@ function Explore() {
         <form>
           <input type="text" id="start" pattern="\d\d-\d\d-\d\d\d\d" placeholder="Start date: (MM-DD-YYYY)"></input>
           <input type="text" id="end" pattern="\d\d-\d\d-\d\d\d\d" placeholder="End date: (MM-DD-YYYY)"></input>
-          <button type="submit" onClick={() => getEventsInRange(setEvents)}>Find events!</button>
+          <button type="submit" onClick={(e) => {
+            e.preventDefault();
+            getEvents(setEvents); 
+            // setStartDate(document.getElementById("start").value); 
+            // setEndDate(document.getElementById("end").value)
+          }}>Find events!</button>
         </form>
       </div>
       {boxRows}
