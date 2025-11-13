@@ -21,6 +21,18 @@
   /* text-align: center; */
 }
 
+.edit-tags-container {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
 #edit-tags {
   text-align: left;
+  width: 12%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }

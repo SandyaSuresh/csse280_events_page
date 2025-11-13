@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { useRef } from 'react'
 import NavBar from './NavBar'
 import './Explore.css'
 
@@ -13,15 +12,6 @@ function addAuthHeader(options) {
     options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
   }
 }
-
-// function isFirstRender() {
-//   const isFirst = useRef(true);
-//   if (isFirst.current) {
-//     isFirst.current = false;
-//     return true;
-//   }
-//   return false;
-// }
 
 function getCurrentDateFormatted() { // this code is somewhere else, replace with function?
   let date = new Date();
@@ -62,8 +52,21 @@ async function getEvents(eventSetterFunc) {
   return await getEventsInRange(eventSetterFunc, dateRange);
 }
 
+function getTagsListFromEventList(events) {
+  let tags = [];
+  for (let i = 1; i <= Object.keys(events).length; i++) {
+    console.log(events[i]);
+    for (let tag of events[i]["tags"]) {
+      if (!(tags.includes(tag))) {
+        tags.push(tag);
+      }
+    }
+  }
+  return tags;
+}
+
 async function getEventsInRange(eventSetterFunc, dateRange) {
-  let tags = ["popular", "problem solving", "computer science", "hackathon", "all majors", "thinking", "csse"];
+  //let tags = ["popular", "problem solving", "computer science", "hackathon", "all majors", "thinking", "csse"];
   let options = {
     method: "GET",
   }
@@ -73,6 +76,9 @@ async function getEventsInRange(eventSetterFunc, dateRange) {
     throw new Error(`Response status: ${response.status}`)
   }
   let json = await response.json();
+  console.log(Object.values(json));
+
+  let tags = getTagsListFromEventList(json);
 
   let relevant_events = getRelevantEvents(json, tags);
 
@@ -95,10 +101,12 @@ async function addBookmark(eventId) {
     throw new Error(`Response status: ${response.status}`)
   }
   for (let element of document.getElementsByClassName("bookmark" + eventId)) {
+    element.classList.remove("clickable");
     element.classList.add("hidden");
   }
   for (let element of document.getElementsByClassName("bookmarked" + eventId)) {
     element.classList.remove("hidden");
+    element.classList.add("clickable");
   }
 }
 
@@ -119,17 +127,12 @@ async function deleteBookmark(eventId) {
   }
   for (let element of document.getElementsByClassName("bookmark" + eventId)) {
     element.classList.remove("hidden");
+    element.classList.add("clickable")
   }
   for (let element of document.getElementsByClassName("bookmarked" + eventId)) {
+    element.classList.remove("clickable");
     element.classList.add("hidden");
   }
-
-  // document.getElementsByClassName("bookmark" + eventId).forEach((element) => {
-  //   element.classList.remove("hidden");
-  // });
-  // document.getElementsByClassName("bookmarked" + eventId).forEach((element) => {
-  //   element.classList.add("hidden");
-  // });
 }
 
 async function renderBookmarks(events) {
@@ -148,17 +151,13 @@ async function renderBookmarks(events) {
       let eventId = Object.keys(event)[0];
       if (bookmarkedEventIds.indexOf(eventId) > -1) { // checks if eventId is in bookmarkedEventIds
         for (let element of document.getElementsByClassName("bookmark" + eventId)) {
+          element.classList.remove("clickable");
           element.classList.add("hidden");
         }
         for (let element of document.getElementsByClassName("bookmarked" + eventId)) {
           element.classList.remove("hidden");
+          element.classList.add("clickable");
         }
-        // document.getElementsByClassName("bookmark" + eventId).forEach((element) => {
-        //   element.classList.add("hidden");
-        // });
-        // document.getElementsByClassName("bookmarked" + eventId).forEach((element) => {
-        //   element.classList.remove("hidden");
-        // });
       }
     }
   }
@@ -175,18 +174,18 @@ function BoxRow({tag, eventArray, viewEventFunc}) {
     namesToIds[eventName] = eventId;
   }
   return (
-    <div>
+    <>
       <h2>{tag}</h2>
-      <div className="container">
+      <section className="container">
         {eventNames.map((eventName, i) => (
           <div key={i} className="box">
-            <p className={`nameOfEventId${namesToIds[eventName]}`} onClick={() => viewEventFunc(namesToIds[eventName])}>{eventName}</p>
-            <p className={`bookmark${namesToIds[eventName]}`} onClick={() => addBookmark(namesToIds[eventName])}>Bookmark</p> {/*better notation?????*/}
+            <p className={`nameOfEventId${namesToIds[eventName]} clickable`} onClick={() => viewEventFunc(namesToIds[eventName])}>{eventName}</p>
+            <p className={`bookmark${namesToIds[eventName]} clickable`} onClick={() => addBookmark(namesToIds[eventName])}>Bookmark</p> {/*better notation?????*/}
             <p className={`hidden bookmarked bookmarked${namesToIds[eventName]}`} onClick={() => deleteBookmark(namesToIds[eventName])}>Bookmarked!</p>
           </div>
         ))}
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
 
@@ -289,7 +288,7 @@ function Explore() {
 
   return (
     <>
-      <div className="top">
+      <section id="top">
         <h1>Explore Page</h1>
         <form>
           <input type="text" id="start" pattern="\d\d-\d\d-\d\d\d\d" placeholder="Start date: (MM-DD-YYYY)"></input>
@@ -301,7 +300,7 @@ function Explore() {
             // setEndDate(document.getElementById("end").value)
           }}>Find events!</button>
         </form>
-      </div>
+      </section>
       {boxRows}
       {viewedEventBox}
     </>

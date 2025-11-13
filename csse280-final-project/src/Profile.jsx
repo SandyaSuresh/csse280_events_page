@@ -111,19 +111,21 @@ async function getTags() {
 function TagEditor() {
   return <>
   {/* <form action="/tags" method="PATCH" encType="application/x-www-form-urlencoded"> */}
-    <label for="edit-tags">Edit Tags:</label>
-    <select id="edit-tags" name="edit-tags" multiple> {/*HARD CODED, NEED A WAY TO GET ALL TAGS?*/}
-      <option name="computer science" value="computer science">computer science</option>
-      <option name="csse" value="csse">csse</option>
-      <option name="learning" value="learning">learning</option>
-      <option name="puzzles" value="puzzles">puzzles</option>
-      <option name="thinking" value="thinking">thinking</option>
-      <option name="problem solving" value="problem solving">problem solving</option>
-      <option name="school wide" value="school wide">school wide</option>
-      <option name="all majors" value="all majors">all majors</option>
-      <option name="hackathon"value="hackathon">hackathon</option>
-    </select>
-    <button onClick={getTags}>Submit</button>
+    <section class="edit-tags-container">
+      <label for="edit-tags">Edit Tags:</label>
+      <select id="edit-tags" name="edit-tags" multiple> {/*HARD CODED, NEED A WAY TO GET ALL TAGS?*/}
+        <option name="computer science" value="computer science">computer science</option>
+        <option name="csse" value="csse">csse</option>
+        <option name="learning" value="learning">learning</option>
+        <option name="puzzles" value="puzzles">puzzles</option>
+        <option name="thinking" value="thinking">thinking</option>
+        <option name="problem solving" value="problem solving">problem solving</option>
+        <option name="school wide" value="school wide">school wide</option>
+        <option name="all majors" value="all majors">all majors</option>
+        <option name="hackathon"value="hackathon">hackathon</option>
+      </select>
+    </section>
+    <button onClick={getTags}>Update Tags</button>
   {/* </form> */}
   </>
 }

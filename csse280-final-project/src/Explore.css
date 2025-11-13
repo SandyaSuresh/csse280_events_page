@@ -30,10 +30,22 @@ input {
   height:fit-content;
 }
 
-.top {
+#top {
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: flex-start;
   align-items: center;
+
+  input, button {
+    margin: 5px;
+  }
+}
+
+form {
+  display: flex;
+  justify-content: flex-end;
+  width: 80%;
+  margin-right: 5%;
+  align-items: flex-end;
 }
 
 .container {
@@ -82,6 +94,10 @@ strong {
 
 .bookmarked {
   color: gold
+}
+
+.clickable:hover {
+  background-color: lightgray;
 }
 
 .hidden {
