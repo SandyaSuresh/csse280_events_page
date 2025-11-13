@@ -22,4 +22,12 @@
 .navbar li a:hover, .foot li a:hover{
     color: grey;
 }
+
+.hide{
+    visibility: hidden;
+}
+
+.show{
+    visibility: visible;
+}
   

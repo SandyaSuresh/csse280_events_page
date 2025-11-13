@@ -1,9 +1,10 @@
-import { useEffect} from 'react'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { useEffect, useState} from 'react'
 import './Timeline.css'
 
-function generateDayBreakdown(json, date){
+function generateDayBreakdown(json, date, func){
+  if(date == undefined){
+    return [];
+  }
   let container = [];
   let seen = [];
   //24 *4 = 96 elements
@@ -48,6 +49,7 @@ function generateDayBreakdown(json, date){
             event_div.classList.add("last-event-div");           
           }
           event_div.style = "background-color: " + colors[key]
+          event_div.onclick = func(renderViewedEvent(key, json[key]));
           // console.log(event_div.style)
 
           // console.log(timeStart.toString() + "   " + timeEnd.toString())
@@ -91,6 +93,65 @@ function getBGColor(event){
   return style
 }
 
+function militaryTo12HourTime(date) {
+  let hour = parseInt(date.slice(11, 13));
+  let minute = parseInt(date.slice(14, 16));
+  if (minute < 10) {
+    minute = "0" + minute;
+  }
+  let extension = "";
+  if (hour >= 12) {
+    extension = " p.m."
+    hour -= 12;
+    if (hour < 10) {
+      hour = parseInt("0" + hour);
+    }
+  } else {
+    extension = " a.m."
+  }
+  let newDate = date.slice(0, 11) + hour + ":" + minute + extension;
+  return newDate;
+}
+
+function renderViewedEvent(eventId, eventsData) {
+  let eventName, eventTags, eventStart, eventEnd, eventGroup = "";
+
+  if (eventId == -1) {
+    return <></>; // ???????????????????????????????????
+  } else {
+    for (let eventsInCategory of Object.values(eventsData)) {
+      for (let eventObj of eventsInCategory) {
+        // console.log(eventObj);
+        // console.log(Object.keys(eventObj));
+        // console.log(Object.values(eventObj));
+        // console.log(Object.keys(Object.values(eventObj)));
+        // console.log(Object.values(Object.keys(eventObj)));
+        if (Object.keys(eventObj)[0] == eventId) {
+          let event = Object.values(eventObj)[0];
+          eventName = event["name"]
+          eventTags = event["tags"].join(", ")
+          eventStart = militaryTo12HourTime(event["start"])
+          if (event["start"].slice(0, 10) == event["end"].slice(0, 10)) {
+            eventEnd = militaryTo12HourTime(event["end"]).slice(11);
+          } else {
+            eventEnd = militaryTo12HourTime(event["end"]);
+          }
+          eventGroup = event["group"];
+        }
+      }
+    }
+    return (
+    <section id="event-info" className="">
+      <button onClick={() => {renderViewedEvent(-1, eventsData)}}>x</button>
+      <strong>{eventName}</strong>
+      <p>Time: {eventStart} to {eventEnd}</p>
+      <p>Group: {eventGroup}</p>
+      <p>Tags: {eventTags}</p>
+    </section>
+    )
+  }
+}
+
 function Timeline({json, date}) {
   // let json = {"1":{"name":"hello world","group":"csse","start":"10/30/2025 17:55:30","end":"10/30/2025 19:00:30","tags":["computer science","csse","learning"]},"2":{"name":"puzzle","group":"problems","start":"10/22/2025 20:00:00","end":"11/17/2025 20:01:00","tags":["puzzles","thinking","problem solving"]},"3":{"name":"25th","group":"greatest floor","start":"12/25/2025 10:10:10","end":"12/26/2025 11:11:11","tags":["school wide","all majors","hackathon"]}}
   // let date = "10-30-2025"
@@ -99,30 +160,37 @@ function Timeline({json, date}) {
   useEffect(()=>{
     generateDayBreakdown(json, date)
   }, [json, date])
+
+  const [viewEvent, setEventDiv] = useState(<></>);
+  // useEffect(() => {
+  //   setEventDive(renderViewedEvent(viewedEvent, events, setViewedEvent));
+  // }, [viewedEvent, events])
   // console.log(json)
-  let events=generateDayBreakdown(json, date);
+  let events=generateDayBreakdown(json, date, setEventDiv);
   // console.log(events)
   return (
     <>
       <div id="container-div">{events.map((item) => (
         <div className={item.classList} key={item.key}>
           {[...item.childNodes].map((event) => (
-            <div className={event.classList} key={event.key} style={getBGColor(event)}>
+            <div className={event.classList} key={event.key} style={getBGColor(event)} onClick={() => {event.onclick}}>
               {[...event.childNodes].map((firstevent) => (
                 <h3>{firstevent.textContent}</h3>
               ))}
             </div>
           ))}
         </div>
-      ))}</div>
+      ))}
+      {viewEvent}
+      </div>
     </>
   );
 };
 
 export default Timeline;
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Timeline />
-  </StrictMode>,
-)
+// createRoot(document.getElementById('root')).render(
+//   <StrictMode>
+//     <Timeline />
+//   </StrictMode>,
+// )

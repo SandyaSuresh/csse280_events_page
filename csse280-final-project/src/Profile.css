@@ -36,3 +36,18 @@
   margin-top: 4px;
   margin-bottom: 4px;
 }
+
+#container-div {
+  float: right;
+  height: 80vh;
+  width: 25vw;
+  overflow-y:scroll
+}
+#calendar{
+  float: left;
+  width: 60vw;
+  height: 80vh;
+}
+.clear{
+  float: none;
+}
