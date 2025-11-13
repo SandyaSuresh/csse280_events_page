@@ -29,8 +29,8 @@
 
 #edit-tags {
   text-align: left;
-  width: 12%;
-  height: 100%;
+  width: 10vw;
+  height: 10vw;
   overflow-x: auto;
   overflow-y: auto;
   margin-top: 4px;
@@ -41,13 +41,14 @@
   float: right;
   height: 80vh;
   width: 25vw;
-  overflow-y:scroll
+  overflow-y:scroll;
+  margin-right: 5vw;
 }
 #calendar{
   float: left;
   width: 60vw;
-  height: 80vh;
+  height: 63vh;
 }
 .clear{
-  float: none;
+  clear:left;
 }

@@ -6,24 +6,73 @@ import Calendar from './Calendar'
 import Timeline from './Timeline'
 import './Profile.css'
 
+async function getBookmarkedEvents(bookmarks) {
+  // get events
+  try {
+    let options = {
+      method: "GET",
+    }
+    if(localStorage["access_token"]){
+      if(!options["headers"]){
+        options["headers"] = {}
+      }
+      options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+    }
+    let dateRange = "01-01-2000 12-31-2099";
+    let response = await fetch(`/events/${dateRange}`, options);
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+    }
+    let events_json = await response.json();
+
+    let bookmarkedEvents = {};
+    // for (let key of Object.keys(events_json)) {
+    //   // console.log(events[i]);
+    //   // for (let tag of events[i]["tags"]) {
+    //   //   if (!(tags.includes(tag))) {
+    //   //     tags.push(tag);
+    //   //   }
+    //   // }
+    //   // console.log("events_json[i]: " + events_json[i]);
+    //   // console.log("Object.keys(events_json): " + Object.keys(events_json));
+    //   // console.log("Object.values(events_json): " + Object.values(events_json));
+    //   // console.log("Object.keys(events_json)[i]: " + Object.keys(events_json)[i]);
+    //   // console.log("Object.values(events_json)[i]: " + Object.values(events_json)[i]);
+    //   bookmarked
+    // }
+    for (let bookmark of bookmarks) {
+      bookmarkedEvents[bookmark] = events_json[bookmark];
+    }
+
+    return bookmarkedEvents;
+  } 
+  catch (ex) {
+    console.error(ex);
+  }
+}
+
 async function updateCalendarandTimeline(date, json_func){
   //MAKE GET REQUEST FOR EVENTS
   try {
-        let options ={
-          method: "GET",
+      // get user bookmarks
+      let options ={
+        method: "GET",
+      }
+      if(localStorage["access_token"]){
+        if(!options["headers"]){
+          options["headers"] = {}
         }
-        if(localStorage["access_token"]){
-          if(!options["headers"]){
-            options["headers"] = {}
-          }
-          options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
-        }
-      let response = await fetch("/bookmarks", options)
+        options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
+      }
+      let response = await fetch("/bookmarks", options);
       if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
       }
-      let json = await response.json();
-      json_func(JSON.stringify(json))
+      let bookmarks_json = await response.json();
+
+      let events_json = await getBookmarkedEvents(bookmarks_json);
+
+      json_func(events_json);
   }
   catch (ex) {
       console.error(ex);
@@ -122,7 +171,7 @@ function Profile(){
 
   useEffect(() => {
     updateCalendarandTimeline(date, setJSON)
-  }, [date, setJSON]);
+  }, [date]);
 
   let comp = (
   <>

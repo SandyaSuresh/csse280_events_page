@@ -2,7 +2,7 @@ import { useEffect, useState} from 'react'
 import './Timeline.css'
 
 function generateDayBreakdown(json, date, func){
-  if(date == undefined){
+  if(date == undefined || json == ""){
     return [];
   }
   let container = [];
@@ -49,7 +49,10 @@ function generateDayBreakdown(json, date, func){
             event_div.classList.add("last-event-div");           
           }
           event_div.style = "background-color: " + colors[key]
-          event_div.onclick = func(renderViewedEvent(key, json[key]));
+          event_div.onclick = (e) => {
+            func(renderViewedEvent(key, json[key]));
+            e.preventDefault;
+          };
           // console.log(event_div.style)
 
           // console.log(timeStart.toString() + "   " + timeEnd.toString())
@@ -157,11 +160,16 @@ function Timeline({json, date}) {
   // let date = "10-30-2025"
   
   // console.log(JSON.stringify(json) + "  " + date)
-  useEffect(()=>{
-    generateDayBreakdown(json, date)
-  }, [json, date])
+
+  // useEffect(()=>{
+  //   generateDayBreakdown(json, date)
+  // }, [json, date])
 
   const [viewEvent, setEventDiv] = useState(<></>);
+
+  useEffect(()=>{
+    generateDayBreakdown(json, date)
+  }, [json, date, setEventDiv]);
   // useEffect(() => {
   //   setEventDive(renderViewedEvent(viewedEvent, events, setViewedEvent));
   // }, [viewedEvent, events])

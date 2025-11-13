@@ -76,7 +76,6 @@ async function getEventsInRange(eventSetterFunc, dateRange) {
     throw new Error(`Response status: ${response.status}`)
   }
   let json = await response.json();
-  console.log(Object.values(json));
 
   let tags = getTagsListFromEventList(json);
 
