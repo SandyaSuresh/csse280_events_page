@@ -152,3 +152,18 @@ def delete_bookmark(username, eventId):
     db.save()
     return True # return value not currently used, might be unnecessary
     
+
+def add_event(name, groupName, startTime, endTime, tags):
+    events_db = pickledb.PickleDB("temp_events.db")
+    id = len(events_db.all()) + 1
+    start = startTime.split("T")
+    end = endTime.split("T")
+
+    events_db.set(str(id), {"name": name, "group": groupName, "start": start[0] + " " + start[1] + ":00", "end" : end[0] + " " + end[1] + ":00", "tags": tags.split(",")})    
+    events_db.save()
+
+    db = get_db()
+    db.set("events", load_events(events_db))
+    db.save()
+
+    

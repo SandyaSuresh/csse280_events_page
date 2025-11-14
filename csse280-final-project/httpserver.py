@@ -42,7 +42,7 @@ def login():
     if(not dataservice.authenticate_user(username, password)):
         return flask.Response(status=401)
     access_token = create_access_token(identity=username)
-    return jsonify(access_token = access_token)
+    return jsonify(access_token = access_token)    
 
 @app.get("/shutdown")
 @jwt_required()
@@ -100,6 +100,17 @@ def add_bookmark():
     username = get_jwt_identity()
     eventId = request.json["event-id"]
     dataservice.add_bookmark(username, eventId)
+    return flask.Response(status="204 No Content") # not sure what should be returned here
+
+@app.post("/event")
+@jwt_required()
+def add_event():
+    event_name = request.json["eventName"]
+    group_name = request.json["groupName"]
+    start_time = request.json["startTime"]
+    end_time = request.json["endTime"]
+    tags = request.json["tags"]
+    dataservice.add_event(event_name, group_name, start_time, end_time, tags)
     return flask.Response(status="204 No Content") # not sure what should be returned here
 
 @app.delete("/bookmark")
