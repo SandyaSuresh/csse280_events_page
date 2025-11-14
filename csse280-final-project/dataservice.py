@@ -35,7 +35,7 @@ def get_user_data(db, username):
     if not username in users:
         return False
     
-    return users[username]["password"], users[username]["tags"], users[username]["events"]
+    return users[username]["password"], users[username]["tags"], users[username]["bookmarks"]
 
 def get_events_list():
     db = get_db()
@@ -52,6 +52,16 @@ def get_events_month(month): # what about events that roll over into the next mo
         if (event_month == month_of_year and event_year == year):
             events += event
     return events # probably formatted wrong or something
+
+def get_user_events(user, date):
+    db = get_db()
+    tag_list = get_user_data(db, user)[1]
+    event_list = get_events_day(date)
+    events = {}
+    for tag in tag_list:
+        for event in event_list:
+            if tag in event_list[event]["tags"]:
+                events[event] = event_list[event]
 
 def get_events_day(date):
     dayStart  = datetime.strptime(date+" 00:00:00", "%m-%d-%Y %H:%M:%S")

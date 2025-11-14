@@ -54,9 +54,11 @@ async function getEvents(eventSetterFunc) {
 
 function getTagsListFromEventList(events) {
   let tags = [];
-  for (let i = 1; i <= Object.keys(events).length; i++) {
-    console.log(events[i]);
-    for (let tag of events[i]["tags"]) {
+  let keys = Object.keys(events)
+  for (let i = 0; i < keys.length; i++) {
+    let key = keys[i]
+    console.log(key)
+    for (let tag of events[key]["tags"]) {
       if (!(tags.includes(tag))) {
         tags.push(tag);
       }

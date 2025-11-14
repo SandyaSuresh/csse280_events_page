@@ -64,7 +64,7 @@ async function updateCalendarandTimeline(date, json_func){
         }
         options["headers"]["Authorization"] = "Bearer " + localStorage["access_token"]
       }
-      let response = await fetch("/bookmarks", options);
+      let response = await fetch("/bookmarks/" + date, options);
       if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
       }
