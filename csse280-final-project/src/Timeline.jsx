@@ -37,7 +37,7 @@ function generateDayBreakdown(json, date){
             event_div.classList.add("event-first-div");
             let eventName = document.createElement("p");
             eventName.textContent = json[key]["name"];
-            eventName.classList.add("eventNameText");
+            // eventName.classList.add("eventNameText");
             event_div.appendChild(eventName);   
 
             seen.push(key);
@@ -165,8 +165,7 @@ function Timeline({json, date}) {
               }
             }}>
               {[...event.childNodes].map((eventFirst) => (
-                <p>{eventFirst.textContent}</p>
-
+                <strong className="eventNameText">{eventFirst.textContent}</strong>
               ))}
             </div>
           ))}
