@@ -31,7 +31,6 @@ def get_db():
 
 def get_user_data(db, username):
     users = db.get("users")
-    #print(all_items)
     if not username in users:
         return False
     
@@ -41,7 +40,7 @@ def get_events_list():
     db = get_db()
     return db["events"]
 
-def get_events_month(month): # what about events that roll over into the next month?
+def get_events_month(month):
     month_of_year = month.split("/")[0]
     year = month_of_year.split("/")[1]
     db = get_db()
@@ -78,7 +77,6 @@ def get_events_day(date):
         
         if(not (dayStart > eventEnd or dayEnd < eventStart)):
             event_list[index] = event
-    # print(event_list)
     return event_list 
 
 def get_events_date_range(dateRange):
@@ -96,13 +94,11 @@ def get_events_date_range(dateRange):
         
         if(not (startDate > eventEnd or endDate < eventStart)):
             event_list[index] = event
-    # print(event_list)
     return event_list
 
 def authenticate_user(username, password):
     db = get_db()
     users = db["users"]
-    #print(users)
     if(not username in users):
         return False
     user = users[username]
@@ -125,7 +121,6 @@ def update_user_tags(username, tags):
     users = db["users"]
     user = users[username]
     user["tags"] = tags
-    # db.set(db["users"][username], user) # might be useless or wrong idk
     db.save()
     return tags
 
@@ -141,7 +136,7 @@ def add_bookmark(username, eventId):
     if (eventId not in user["bookmarks"]):
         user["bookmarks"].append(eventId)
     db.save()
-    return True # return value not currently used, might be unnecessary
+    return True
 
 def delete_bookmark(username, eventId):
     db = get_db()
@@ -150,7 +145,7 @@ def delete_bookmark(username, eventId):
     if (eventId in user["bookmarks"]):
         user["bookmarks"].remove(eventId)
     db.save()
-    return True # return value not currently used, might be unnecessary
+    return True
     
 
 def add_event(name, groupName, startTime, endTime, tags):

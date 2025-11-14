@@ -30,4 +30,8 @@
 .show{
     visibility: visible;
 }
+
+#new-event-cont {
+    color: black;
+}
   
