@@ -62,6 +62,13 @@ def get_day(event_date):
     return flask.Response(status="200 OK",
                             headers={"Content-Type": "application/json"},
                             response = json.dumps(dataservice.get_events_day(event_date)))
+@app.get("/tagged/<event_date>")
+@jwt_required()
+def get_tagged_day(event_date):
+    username = get_jwt_identity()
+    return flask.Response(status="200 OK",
+                            headers={"Content-Type": "application/json"},
+                            response = json.dumps(dataservice.get_tagged_events_for_day(username, event_date)))
 
 @app.get("/events/<daterange>") # formatted MM-DD-YYYY MM-DD-YYYY (startDate endDate)
 @jwt_required()

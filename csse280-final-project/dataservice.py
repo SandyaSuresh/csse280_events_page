@@ -147,6 +147,19 @@ def delete_bookmark(username, eventId):
     db.save()
     return True
     
+def get_tagged_events_for_day(user, date):
+    db = get_db()
+    user_tags = get_user_data(db, user)[1]
+    day_events = get_events_day(date)
+    events = {}
+    for event in day_events:
+        for tag in user_tags:
+            if(tag in day_events[event]["tags"]):
+                events[event] = day_events[event]
+    return events
+
+
+
 
 def add_event(name, groupName, startTime, endTime, tags):
     events_db = pickledb.PickleDB("temp_events.db")
