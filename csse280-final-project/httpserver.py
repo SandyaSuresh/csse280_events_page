@@ -70,7 +70,7 @@ def get_date_range(daterange):
                         headers={"Content-Type": "application/json"},
                         response = json.dumps(dataservice.get_events_date_range(daterange)))
 
-@app.patch("/tags") # didn't put tags parameter as this should take the whole list from the form
+@app.patch("/tags")
 @jwt_required()
 def update_tags():
     username = get_jwt_identity()
@@ -100,7 +100,7 @@ def add_bookmark():
     username = get_jwt_identity()
     eventId = request.json["event-id"]
     dataservice.add_bookmark(username, eventId)
-    return flask.Response(status="204 No Content") # not sure what should be returned here
+    return flask.Response(status="204 No Content")
 
 @app.post("/event")
 @jwt_required()
@@ -111,7 +111,7 @@ def add_event():
     end_time = request.json["endTime"]
     tags = request.json["tags"]
     dataservice.add_event(event_name, group_name, start_time, end_time, tags)
-    return flask.Response(status="204 No Content") # not sure what should be returned here
+    return flask.Response(status="204 No Content")
 
 @app.delete("/bookmark")
 @jwt_required()
@@ -119,7 +119,7 @@ def delete_bookmark():
     username = get_jwt_identity()
     eventId = request.json["event-id"]
     dataservice.delete_bookmark(username, eventId)
-    return flask.Response(status="204 No Content") # not sure what should be returned here
+    return flask.Response(status="204 No Content")
 
 
 if __name__ == "__main__":

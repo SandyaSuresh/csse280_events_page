@@ -179,11 +179,11 @@ function BoxRow({tag, eventArray, viewEventFunc}) {
       <h2>{tag}</h2>
       <section className="container">
         {eventNames.map((eventName, i) => (
-          <div key={i} className="box">
+          <section key={i} className="box">
             <p className={`nameOfEventId${namesToIds[eventName]} clickable`} onClick={() => viewEventFunc(namesToIds[eventName])}>{eventName}</p>
             <p className={`bookmark${namesToIds[eventName]} clickable`} onClick={() => addBookmark(namesToIds[eventName])}>Bookmark</p> {/*better notation?????*/}
             <p className={`hidden bookmarked bookmarked${namesToIds[eventName]}`} onClick={() => deleteBookmark(namesToIds[eventName])}>Bookmarked!</p>
-          </div>
+          </section>
         ))}
       </section>
     </>
