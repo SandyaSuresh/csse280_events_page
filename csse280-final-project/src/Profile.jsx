@@ -70,7 +70,8 @@ async function updateCalendarandTimeline(date, json_func){
       }
       let bookmarks_json = await response.json();
 
-      let events_json = await getBookmarkedEvents(bookmarks_json);
+      let events_json = await bookmarks_json;
+      console.log(events_json)
 
       json_func(events_json);
   }

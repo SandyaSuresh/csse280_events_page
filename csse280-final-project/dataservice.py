@@ -55,13 +55,13 @@ def get_events_month(month): # what about events that roll over into the next mo
 
 def get_user_events(user, date):
     db = get_db()
-    tag_list = get_user_data(db, user)[1]
+    bookmark_list = get_user_data(db, user)[2]
     event_list = get_events_day(date)
     events = {}
-    for tag in tag_list:
-        for event in event_list:
-            if tag in event_list[event]["tags"]:
-                events[event] = event_list[event]
+    for event in event_list:
+        if event in bookmark_list:
+            events[event] = event_list[event]
+    return events
 
 def get_events_day(date):
     dayStart  = datetime.strptime(date+" 00:00:00", "%m-%d-%Y %H:%M:%S")
@@ -131,9 +131,8 @@ def update_user_tags(username, tags):
 
 def get_bookmarks(username):
     db = get_db()
-    users = db["users"]
-    user = users[username]
-    return user["bookmarks"]
+    
+    return get_user_data(db, username=username)[2]
 
 def add_bookmark(username, eventId):
     db = get_db()
