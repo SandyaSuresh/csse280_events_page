@@ -157,9 +157,11 @@ def add_event(name, groupName, startTime, endTime, tags):
     events_db = pickledb.PickleDB("temp_events.db")
     id = len(events_db.all()) + 1
     start = startTime.split("T")
+    sd = start[0].split("-")
     end = endTime.split("T")
+    ed = end[0].split("-")
 
-    events_db.set(str(id), {"name": name, "group": groupName, "start": start[0] + " " + start[1] + ":00", "end" : end[0] + " " + end[1] + ":00", "tags": tags.split(",")})    
+    events_db.set(str(id), {"name": name, "group": groupName, "start": sd[1] + "/" + sd[2]+ "/" + sd[0] + " " + start[1] + ":00", "end" : ed[1] + "/" + ed[2]+ "/" + ed[0] + " " + end[1] + ":00", "tags": tags.split(",")})    
     events_db.save()
 
     db = get_db()
